@@ -181,6 +181,10 @@ function Message({ message }) {
     <div className="message-row assistant-row">
       <div className="assistant-avatar">✝</div>
       <div className="assistant-column">
+        <div className="assistant-chrome">
+          <span className="assistant-label">Christian AI</span>
+          <span className="assistant-badge">Grounded response</span>
+        </div>
         {parsed.isFlagged && <div className="moderation-badge">🛡 Content moderated</div>}
         <div className="assistant-bubble">
           {parsed.blocks.map((block, index) =>
@@ -251,8 +255,20 @@ export default function App() {
     []
   );
 
+  const quickReplies = useMemo(
+    () => [
+      "Explain the Holy Trinity simply",
+      "What does John 3:16 mean?",
+      "Generate a reverent church image",
+      "Catholic vs Protestant view on salvation"
+    ],
+    []
+  );
+
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length > 0 || loading) {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages, loading]);
 
   async function sendMessage(text) {
@@ -305,13 +321,37 @@ export default function App() {
     <div className="app-shell">
       <div className="app-frame">
         <header className="top-bar">
-          <div className="brand-mark">✝</div>
-          <div>
-            <div className="brand-title">Christian AI Assistant</div>
-            <div className="brand-subtitle">Scripture-grounded · Denomination-aware · Moderated</div>
+          <div className="brand-group">
+            <div className="brand-mark">✝</div>
+            <div>
+              <div className="brand-title">Christian AI Assistant</div>
+              <div className="brand-subtitle">Scripture-grounded · Denomination-aware · Moderated</div>
+            </div>
           </div>
-          <div className="status-pill">Safe by design</div>
+          <div className="header-actions">
+            <div className="status-pill">Live demo</div>
+            <div className="status-chip">Render + Vercel</div>
+          </div>
         </header>
+
+        <section className="summary-strip">
+          <div className="summary-item">
+            <span className="summary-kicker">Grounding</span>
+            <strong>Real verses only</strong>
+          </div>
+          <div className="summary-item">
+            <span className="summary-kicker">Safety</span>
+            <strong>Moderation-first replies</strong>
+          </div>
+          <div className="summary-item">
+            <span className="summary-kicker">Images</span>
+            <strong>Christian art generation</strong>
+          </div>
+          <div className="summary-item">
+            <span className="summary-kicker">Context</span>
+            <strong>{denomination} theology mode</strong>
+          </div>
+        </section>
 
         <section className="denomination-bar">
           <span className="bar-label">Tradition</span>
@@ -331,67 +371,91 @@ export default function App() {
 
         <main className="chat-area">
           {showWelcome && (
-          <section className="welcome-panel">
-            <div className="welcome-symbol">✝</div>
-            <h1>Peace be with you</h1>
-            <p>
-              Ask a question about Christianity, theology, or Scripture, or request a Christian-themed image.
-              Responses stay warm, reverent, and grounded in the Bible.
-            </p>
-            <div className="welcome-highlights">
-              <div className="highlight-card">
-                <span className="highlight-label">Grounded</span>
-                <strong>Real verse citations only</strong>
-                <p>Fake references are corrected instead of repeated.</p>
-              </div>
-              <div className="highlight-card">
-                <span className="highlight-label">Safe</span>
-                <strong>Moderation built in</strong>
-                <p>Harmful or adversarial religious prompts are refused gracefully.</p>
-              </div>
-              <div className="highlight-card">
-                <span className="highlight-label">Multimodal</span>
-                <strong>Christian image generation</strong>
-                <p>Safe visual prompts can generate reverent artwork on demand.</p>
-              </div>
-            </div>
+            <section className="welcome-panel">
+              <div className="welcome-copy">
+                <div className="welcome-kicker">Faithful by design</div>
+                <div className="welcome-symbol">✝</div>
+                <h1>Ask about Scripture with clarity and reverence</h1>
+                <p>
+                  This assistant keeps answers Biblically grounded, distinguishes
+                  Christian traditions, and refuses harmful or fabricated religious output.
+                </p>
 
-            <div className="media-showcase">
-              {featuredMedia.map((item) =>
-                item.type === "image" ? (
-                  <article key={item.title} className="media-card">
-                    <div className="media-frame">
-                      <img
-                        src={createChristianArtDataUrl(item.prompt, 520, 360)}
-                        alt={item.title}
-                      />
-                    </div>
-                    <div className="media-meta">
-                      <strong>{item.title}</strong>
-                      <span>{item.caption}</span>
-                    </div>
-                  </article>
-                ) : (
-                  <article key={item.title} className="media-card">
-                    <div className="media-frame media-video">
-                      <DemoVideo />
-                    </div>
-                    <div className="media-meta">
-                      <strong>{item.title}</strong>
-                      <span>{item.caption}</span>
-                    </div>
-                  </article>
-                )
-              )}
-            </div>
+                <div className="welcome-actions">
+                  <button type="button" className="primary-cta" onClick={() => sendMessage("Explain the Holy Trinity in simple terms")}>
+                    Start with theology
+                  </button>
+                  <button type="button" className="secondary-cta" onClick={() => sendMessage("Generate a reverent nativity scene image")}>
+                    Try image generation
+                  </button>
+                </div>
 
-            <div className="suggestion-grid">
-              {SUGGESTIONS.map((suggestion) => (
-                <button key={suggestion} type="button" className="suggestion-chip" onClick={() => sendMessage(suggestion)}>
-                  {suggestion}
-                </button>
-              ))}
-            </div>
+                <div className="welcome-highlights">
+                  <div className="highlight-card">
+                    <span className="highlight-label">Grounded</span>
+                    <strong>Real verse citations only</strong>
+                    <p>Fake references are corrected instead of repeated.</p>
+                  </div>
+                  <div className="highlight-card">
+                    <span className="highlight-label">Safe</span>
+                    <strong>Moderation built in</strong>
+                    <p>Harmful or adversarial religious prompts are refused gracefully.</p>
+                  </div>
+                  <div className="highlight-card">
+                    <span className="highlight-label">Multimodal</span>
+                    <strong>Christian image generation</strong>
+                    <p>Safe visual prompts can generate reverent artwork on demand.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="welcome-showcase">
+                <div className="showcase-card showcase-hero">
+                  <div className="showcase-tag">Featured demos</div>
+                  <div className="media-showcase">
+                    {featuredMedia.map((item) =>
+                      item.type === "image" ? (
+                        <article key={item.title} className="media-card">
+                          <div className="media-frame">
+                            <img
+                              src={createChristianArtDataUrl(item.prompt, 520, 360)}
+                              alt={item.title}
+                            />
+                          </div>
+                          <div className="media-meta">
+                            <strong>{item.title}</strong>
+                            <span>{item.caption}</span>
+                          </div>
+                        </article>
+                      ) : (
+                        <article key={item.title} className="media-card">
+                          <div className="media-frame media-video">
+                            <DemoVideo />
+                          </div>
+                          <div className="media-meta">
+                            <strong>{item.title}</strong>
+                            <span>{item.caption}</span>
+                          </div>
+                        </article>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                <div className="showcase-card quick-panel">
+                  <div className="quick-panel-header">
+                    <strong>Quick prompts</strong>
+                    <span>Tap to demo the assistant</span>
+                  </div>
+                  <div className="suggestion-grid compact">
+                    {quickReplies.map((suggestion) => (
+                      <button key={suggestion} type="button" className="suggestion-chip" onClick={() => sendMessage(suggestion)}>
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </section>
           )}
 
@@ -404,17 +468,25 @@ export default function App() {
         </main>
 
         <footer className="composer">
-          <textarea
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Ask a question or say 'Generate an image of...'"
-            rows={1}
-            className="composer-input"
-          />
-          <button type="button" className="send-button" onClick={() => sendMessage(input)} disabled={!input.trim() || loading}>
-            ↑
-          </button>
+          <div className="composer-shell">
+            <div className="composer-meta">
+              <span className="composer-label">Conversation</span>
+              <span className="composer-help">Press Enter to send, Shift+Enter for a new line</span>
+            </div>
+            <div className="composer-row">
+              <textarea
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask a question or say 'Generate an image of...'"
+                rows={1}
+                className="composer-input"
+              />
+              <button type="button" className="send-button" onClick={() => sendMessage(input)} disabled={!input.trim() || loading}>
+                ↑
+              </button>
+            </div>
+          </div>
         </footer>
       </div>
     </div>
