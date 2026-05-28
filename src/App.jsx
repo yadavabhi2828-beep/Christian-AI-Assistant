@@ -215,7 +215,10 @@ function TypingIndicator() {
 }
 
 function localEndpoint() {
-  return import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL}/api/chat` : "/api/chat";
+  const baseUrl =
+    import.meta.env.VITE_API_BASE_URL ||
+    "https://christian-ai-assistant.onrender.com";
+  return `${baseUrl}/api/chat`;
 }
 
 export default function App() {
