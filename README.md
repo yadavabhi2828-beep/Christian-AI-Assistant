@@ -16,7 +16,7 @@ A scripture-grounded, denomination-aware Christian AI assistant with safe image 
 
 - React + Vite frontend
 - Express backend proxy
-- Anthropic Claude `claude-sonnet-4-20250514`
+- Gemini 2.5 Flash, Gemini 3.5 Flash, and Gemini 2.5 Flash Lite with failover
 - Pollinations.ai for Christian image generation
 
 ## Local Setup
@@ -29,7 +29,8 @@ npm run dev
 
 ## Environment Variables
 
-- `ANTHROPIC_API_KEY` - Anthropic API key for live assistant calls
+- `GEMINI_API_KEY` - Gemini API key for live assistant calls
+- `GEMINI_MODELS` - optional comma-separated failover order
 - `VITE_API_BASE_URL` - backend base URL for the frontend in production
 - `PORT` - backend port
 - `USE_DEMO_FALLBACK` - keep a deterministic demo fallback enabled
@@ -52,7 +53,8 @@ npm run dev
 ### Backend Proxy
 
 - Deploy `server/index.js` to Railway or Render.
-- Set `ANTHROPIC_API_KEY` in the backend environment.
+- Set `GEMINI_API_KEY` in the backend environment.
+- Optional: set `GEMINI_MODELS=gemini-2.5-flash,gemini-3.5-flash,gemini-2.5-flash-lite` to control failover order.
 
 ## Evaluation
 
